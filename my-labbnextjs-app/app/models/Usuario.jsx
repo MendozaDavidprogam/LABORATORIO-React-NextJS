@@ -1,5 +1,4 @@
 // models/Usuario.jsx
-// models/Usuario.jsx
 import mongoose from 'mongoose';
 
 const usuarioSchema = new mongoose.Schema({
