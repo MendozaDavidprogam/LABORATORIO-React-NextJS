@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import RegisterModal from './RegisterModal';
 import LoginModal from './loginModal';
+import ArticuloModal from './ArticlesModal';
 
 export default function Header() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showArticleModel, setShowArticleModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogout = () => {
@@ -45,7 +47,7 @@ export default function Header() {
               </>
             ) : (
               <>
-                <button className="btn btn-outline-light" disabled>
+                <button className="btn btn-primary" onClick={() => setShowArticleModal(true)}>
                   Registrar Articulo
                 </button>
                 <button className="btn btn-danger" onClick={handleLogout}>
@@ -57,11 +59,8 @@ export default function Header() {
         </div>
       </header>
       <RegisterModal show={showRegisterModal} handleClose={() => setShowRegisterModal(false)} />
-      <LoginModal
-        show={showLoginModal}
-        handleClose={() => setShowLoginModal(false)}
-        onLoginSuccess={() => setIsAuthenticated(true)}
-      />
+      <LoginModal show={showLoginModal} handleClose={() => setShowLoginModal(false)} onLoginSuccess={() => setIsAuthenticated(true)}/>
+      <ArticuloModal show={showArticleModel} handleClose={() => setShowArticleModal(false)}/>
     </>
   );
 }
