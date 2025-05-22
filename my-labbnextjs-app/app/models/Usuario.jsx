@@ -1,4 +1,5 @@
 // models/Usuario.jsx
+// models/Usuario.jsx
 import mongoose from 'mongoose';
 
 const usuarioSchema = new mongoose.Schema({
@@ -9,6 +10,6 @@ const usuarioSchema = new mongoose.Schema({
     type: Number, 
     required: true,
   },
-}, { collection: 'usuarios' });
+}, { collection: 'Usuarios' });
 
 export default mongoose.models.Usuario || mongoose.model('Usuario', usuarioSchema);
