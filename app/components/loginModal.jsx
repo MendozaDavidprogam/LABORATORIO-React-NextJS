@@ -25,12 +25,14 @@ export default function LoginModal({ show, handleClose, onLoginSuccess }) {
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         alert('Inicio de sesión exitoso');
-        onLoginSuccess(); 
+        onLoginSuccess(data.usuario);
         handleClose();
       } else {
-        alert('Credenciales incorrectas');
+        alert(data.message || 'Credenciales incorrectas');
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -45,8 +47,6 @@ export default function LoginModal({ show, handleClose, onLoginSuccess }) {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-
-          {/* Campo para el nombre */}
           <Form.Group className="mb-3">
             <Form.Label>Nombre</Form.Label>
             <Form.Control
@@ -58,7 +58,6 @@ export default function LoginModal({ show, handleClose, onLoginSuccess }) {
             />
           </Form.Group>
 
-          {/* Campo para la cédula */}
           <Form.Group className="mb-3">
             <Form.Label>Cédula</Form.Label>
             <Form.Control

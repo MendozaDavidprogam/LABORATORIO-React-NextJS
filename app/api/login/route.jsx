@@ -18,10 +18,17 @@ export async function POST(req) {
       return new Response(JSON.stringify({ message: 'Usuario no encontrado' }), { status: 404 });
     }
 
-    return new Response(JSON.stringify({ message: 'Inicio de sesión exitoso' }), { status: 200 });
+    return new Response(JSON.stringify({
+      message: 'Inicio de sesión exitoso',
+      usuario: {
+        nombre: usuario.nombre,
+        rol: usuario.rol === 1 ? 'publicador' : 'lector' 
+      }
+    }), { status: 200 });
 
   } catch (error) {
     console.error('Error en POST /api/login:', error); 
     return new Response(JSON.stringify({ message: 'Error interno del servidor' }), { status: 500 });
   }
 }
+
