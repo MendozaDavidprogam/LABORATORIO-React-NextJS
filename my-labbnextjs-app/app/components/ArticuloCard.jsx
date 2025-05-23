@@ -1,5 +1,4 @@
 // components/ArticuloCard.jsx
-
 'use client';
 
 import { useState } from 'react';
@@ -13,15 +12,35 @@ export default function ArticuloCard({ articulo }) {
 
   return (
     <>
-      <Card className="h-100">
-        <Card.Body>
-          <Card.Title>{articulo.titulo}</Card.Title>
-          <Card.Text>
-            {articulo.informacion.length > 100
-              ? articulo.informacion.substring(0, 100) + '...'
+      <Card className="h-100 shadow-sm" style={{ maxWidth: '400px', margin: 'auto' }}>
+        {articulo.imagen && (
+          <Card.Img
+            variant="top"
+            src={articulo.imagen}
+            alt="Imagen del artículo"
+            style={{
+              maxHeight: '220px',
+              objectFit: 'cover',
+              borderTopLeftRadius: '.25rem',
+              borderTopRightRadius: '.25rem',
+            }}
+          />
+        )}
+        <Card.Body className="p-4">
+          <Card.Title className="h5">{articulo.titulo}</Card.Title>
+          <Card.Text
+            style={{
+              fontSize: '1rem',
+              maxHeight: '110px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {articulo.informacion.length > 120
+              ? articulo.informacion.substring(0, 120) + '...'
               : articulo.informacion}
           </Card.Text>
-          <Button variant="primary" onClick={handleShow}>
+          <Button variant="primary" size="md" onClick={handleShow} className="w-100">
             Ver más
           </Button>
         </Card.Body>
@@ -32,6 +51,10 @@ export default function ArticuloCard({ articulo }) {
           <Modal.Title>{articulo.titulo}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {articulo.imagen && (
+            <img src={articulo.imagen} alt="Imagen" className="img-fluid mb-3" />
+          )}
+          <p><strong>ID del Artículo:</strong> {articulo.articuloId || articulo.idarticulo}</p>
           <p><strong>Información:</strong></p>
           <p>{articulo.informacion}</p>
           <p><strong>Categoría ID:</strong> {articulo.categoria}</p>

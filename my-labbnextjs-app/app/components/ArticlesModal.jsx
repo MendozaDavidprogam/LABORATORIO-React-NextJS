@@ -8,13 +8,14 @@ export default function ArticuloModal({ show, handleClose }) {
     titulo: '',
     informacion: '',
     categoria: '',
+    imagen: '',
   });
 
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
     async function fetchCategorias() {
-      const res = await fetch('/api/categorias'); 
+      const res = await fetch('/api/categorias');
       const data = await res.json();
       setCategorias(data);
     }
@@ -25,7 +26,6 @@ export default function ArticuloModal({ show, handleClose }) {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      // Convertir a número sólo para el campo categoria
       [name]: name === 'categoria' ? Number(value) : value,
     }));
   };
@@ -71,6 +71,17 @@ export default function ArticuloModal({ show, handleClose }) {
               name="informacion"
               required
               value={formData.informacion}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen (URL)</Form.Label>
+            <Form.Control
+              type="text"
+              name="imagen"
+              placeholder="https://..."
+              value={formData.imagen}
               onChange={handleChange}
             />
           </Form.Group>

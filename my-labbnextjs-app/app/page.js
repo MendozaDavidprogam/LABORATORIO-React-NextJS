@@ -8,13 +8,14 @@ import ArticuloCard from './components/ArticuloCard';
 
 export default async function Home() {
   await connectDB();
+
   const articulosRaw = await Articulo.find().sort({ articuloId: -1 }).lean();
 
-  // Transformamos los objetos para que sean planos
   const articulos = articulosRaw.map((articulo) => ({
     ...articulo,
-    _id: articulo._id.toString(), // Convierte ObjectId a string
-    categoria: articulo.categoria?.toString() || '', // por si es ObjectId
+    _id: articulo._id.toString(),
+    categoria: articulo.categoria?.toString() || '',
+    articuloId: articulo.articuloId?.toString() || '', // Cambio aquí
   }));
 
   return (
