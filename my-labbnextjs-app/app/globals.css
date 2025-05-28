@@ -1,27 +1,9 @@
 @import "tailwindcss";
-@import "bootstrap/dist/css/bootstrap.min.css";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
-
-/* globals.css */
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-main {
-  flex: 1;
-}
-
 
 @theme inline {
   --color-background: var(--background);

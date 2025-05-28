@@ -1,99 +1,124 @@
+// app/components/RegisterModal.jsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
 
-export default function RegisterModal({ show, handleClose }) {
-  const [formData, setFormData] = useState({
+export default function RegisterModal({ show, onClose }) {
+  const [roles, setRoles] = useState([]);
+  const [form, setForm] = useState({
     nombre: '',
     apellido: '',
     cedula: '',
     rol: '',
   });
-
-  const [roles, setRoles] = useState([]);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    async function fetchRoles() {
-      const res = await fetch('/api/roles');
-      const data = await res.json();
-      setRoles(data);
+    if (show) {
+      fetch('/api/roles')
+        .then((res) => res.json())
+        .then((data) => {
+          setRoles(data);
+        })
+        .catch(() => setError('No se pudieron cargar los roles'));
     }
-    fetchRoles();
-  }, []);
+  }, [show]);
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
+    setError('');
+    setSuccess('');
 
-    if (res.ok) {
-      alert('Usuario registrado con éxito');
-      handleClose();
-    } else {
-      alert('Error al registrar el usuario');
+    
+    if (!form.nombre || !form.apellido || !form.cedula || !form.rol) {
+      setError('Por favor completa todos los campos.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/usuarios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.message || 'Error al registrar usuario.');
+        return;
+      }
+
+      setSuccess('Usuario registrado correctamente.');
+      setForm({ nombre: '', apellido: '', cedula: '', rol: '' });
+
+      // Cerrar modal tras 2 segundos (opcional)
+      setTimeout(() => {
+        setSuccess('');
+        onClose();
+      }, 2000);
+    } catch {
+      setError('Error de conexión al registrar usuario.');
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Registro de Usuario</Modal.Title>
+        <Modal.Title>Registrar Usuario</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {error && <Alert variant="danger">{error}</Alert>}
+        {success && <Alert variant="success">{success}</Alert>}
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formNombre">
             <Form.Label>Nombre</Form.Label>
             <Form.Control
               type="text"
               name="nombre"
-              required
-              value={formData.nombre}
+              value={form.nombre}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formApellido">
             <Form.Label>Apellido</Form.Label>
             <Form.Control
               type="text"
               name="apellido"
-              required
-              value={formData.apellido}
+              value={form.apellido}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formCedula">
             <Form.Label>Cédula</Form.Label>
             <Form.Control
               type="text"
               name="cedula"
-              required
-              value={formData.cedula}
+              value={form.cedula}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formRol">
             <Form.Label>Rol</Form.Label>
             <Form.Select
               name="rol"
-              required
-              value={formData.rol}
+              value={form.rol}
               onChange={handleChange}
+              required
             >
-              <option value="">Selecciona un rol</option>
+              <option value="">Seleccione un rol</option>
               {roles.map((r) => (
                 <option key={r._id} value={r._id}>
                   {r.nombre}
@@ -102,11 +127,16 @@ export default function RegisterModal({ show, handleClose }) {
             </Form.Select>
           </Form.Group>
 
-          <Button type="submit" variant="primary" className="w-100">
+          <Button variant="primary" type="submit">
             Registrar
           </Button>
         </Form>
       </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={onClose}>
+          Cancelar
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 }
