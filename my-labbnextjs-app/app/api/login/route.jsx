@@ -1,29 +1,31 @@
+// api/login/route.jsx
 
-
-import { connectDB } from '../../utils/db';
+import connectToDatabase from '../../lib/mongodb';
 import Usuario from '../../models/Usuario';
 
-export async function POST(req) {
+export async function POST(request) {
   try {
-    await connectDB();
+    const { nombre, cedula } = await request.json();
 
-    const data = await req.json();
-    const { nombre, cedula } = data;  
-
-    if (!nombre || !cedula) {
-      return new Response(JSON.stringify({ message: 'Campos incompletos' }), { status: 400 });
-    }
+    await connectToDatabase();
 
     const usuario = await Usuario.findOne({ nombre, cedula });
 
     if (!usuario) {
-      return new Response(JSON.stringify({ message: 'Usuario no encontrado' }), { status: 404 });
+      return new Response(
+        JSON.stringify({ message: 'Usuario o cédula incorrectos.' }),
+        { status: 401, headers: { 'Content-Type': 'application/json' } }
+      );
     }
 
-    return new Response(JSON.stringify({ message: 'Inicio de sesión exitoso' }), { status: 200 });
-
+    return new Response(
+      JSON.stringify({ usuario }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    );
   } catch (error) {
-    console.error('Error en POST /api/login:', error); 
-    return new Response(JSON.stringify({ message: 'Error interno del servidor' }), { status: 500 });
+    return new Response(
+      JSON.stringify({ message: 'Error interno en el servidor.' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    );
   }
 }

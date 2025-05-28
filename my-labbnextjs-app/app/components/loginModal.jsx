@@ -1,76 +1,80 @@
+// app/components/LoginModal.jsx
+
 'use client';
 
 import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Alert } from 'react-bootstrap';
 
-export default function LoginModal({ show, handleClose, onLoginSuccess }) {
-  const [formData, setFormData] = useState({
-    nombre: '',
-    cedula: '',
-  });
+export default function LoginModal({ show, onClose, onLoginSuccess }) {
+  const [form, setForm] = useState({ nombre: '', cedula: '' });
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+
+    if (!form.nombre || !form.cedula) {
+      setError('Por favor completa todos los campos.');
+      return;
+    }
+
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(form),
       });
 
-      if (res.ok) {
-        alert('Inicio de sesión exitoso');
-        onLoginSuccess(); 
-        handleClose();
-      } else {
-        alert('Credenciales incorrectas');
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || 'Error en inicio de sesión.');
+        return;
       }
-    } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      alert('Error al iniciar sesión, por favor intenta nuevamente');
+
+      // Pasa el usuario autenticado al componente padre
+      onLoginSuccess(data.usuario);
+      onClose();
+    } catch {
+      setError('Error de conexión al iniciar sesión.');
     }
   };
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Inicio de Sesión</Modal.Title>
+        <Modal.Title>Iniciar Sesión</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleSubmit}>
-
-          {/* Campo para el nombre */}
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formNombre">
             <Form.Label>Nombre</Form.Label>
             <Form.Control
               type="text"
               name="nombre"
-              required
-              value={formData.nombre}
+              value={form.nombre}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
-          {/* Campo para la cédula */}
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3" controlId="formCedula">
             <Form.Label>Cédula</Form.Label>
             <Form.Control
               type="text"
               name="cedula"
-              required
-              value={formData.cedula}
+              value={form.cedula}
               onChange={handleChange}
+              required
             />
           </Form.Group>
 
-          <Button type="submit" variant="primary" className="w-100">
+          <Button variant="primary" type="submit">
             Iniciar Sesión
           </Button>
         </Form>

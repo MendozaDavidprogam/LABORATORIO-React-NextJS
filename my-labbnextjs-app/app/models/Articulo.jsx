@@ -1,25 +1,21 @@
 // models/Articulo.jsx
-
 import mongoose from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 
 const AutoIncrement = AutoIncrementFactory(mongoose);
 
-const articuloSchema = new mongoose.Schema({
-  idarticulo: {
-    type: Number, // cambia a Number si usas auto-incremento
-    unique: true,
-  },
-  titulo: String,
-  informacion: String,
+const ArticuloSchema = new mongoose.Schema({
+  articuloId: { type: Number, unique: true }, // campo autoincremental
+  titulo: { type: String, required: true },
+  descripcion: { type: String, required: true },
   imagen: String,
-  categoria: {
-    type: Number,
-    required: true,
-  },
-}, { collection: 'articulos' });
+  categoria: { type: String, required: true },
+  fechaCreacion: { type: Date, default: Date.now },
+  usuarioId: { type: Number, required: true, ref: 'Usuario' },
+});
 
-// Auto-incrementa el campo `idarticulo`
-articuloSchema.plugin(AutoIncrement, { inc_field: 'idarticulo' });
+// Aplica el plugin para autoincrementar 'articuloId'
+ArticuloSchema.plugin(AutoIncrement, { inc_field: 'articuloId' });
 
-export default mongoose.models.Articulo || mongoose.model('Articulo', articuloSchema);
+export default mongoose.models.Articulo || mongoose.model('Articulo', ArticuloSchema, 'articulos');
+

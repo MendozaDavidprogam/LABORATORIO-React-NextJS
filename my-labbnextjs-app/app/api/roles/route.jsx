@@ -1,8 +1,12 @@
-import { connectDB } from '../../utils/db';
+// api/roles/route.jsx
+import connectToDatabase from '../../lib/mongodb';
 import Rol from '../../models/Rol';
 
 export async function GET() {
-  await connectDB();
-  const roles = await Rol.find().lean();
-  return new Response(JSON.stringify(roles), { status: 200 });
+  await connectToDatabase();
+  const roles = await Rol.find({}, '_id nombre descripcion');
+  return new Response(JSON.stringify(roles), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
