@@ -34,7 +34,7 @@ async function connectToDatabase() {
 export default connectToDatabase;
 */
 
-// conexion a la nube
+
 import mongoose from 'mongoose';
 
 const MONGODB_URI = 'mongodb+srv://mendozadavidprogramacion20:PhAW0YuVob0mOTNX@bd.boulctk.mongodb.net/LABORATORIO_NextJS?retryWrites=true&w=majority&appName=bd';
