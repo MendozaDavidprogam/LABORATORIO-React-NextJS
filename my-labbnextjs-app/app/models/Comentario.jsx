@@ -1,4 +1,4 @@
-// models/Comentario.jsx
+
 import mongoose from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 

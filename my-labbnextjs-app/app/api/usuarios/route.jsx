@@ -1,4 +1,3 @@
-// api/usuarios/route.jsx
 import connectToDatabase from '../../lib/mongodb';
 import Usuario from '../../models/Usuario';
 import mongoose from 'mongoose';

@@ -1,4 +1,4 @@
-// app/components/ArticleCard.jsx
+
 'use client';
 
 import { Card, Button } from 'react-bootstrap';

@@ -1,4 +1,3 @@
-// app/components/ArticleViewModal.jsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -9,7 +8,15 @@ export default function ArticleViewModal({ show, onClose, articulo }) {
   const [nuevoComentario, setNuevoComentario] = useState('');
   const [respuesta, setRespuesta] = useState({});
   const [loading, setLoading] = useState(false);
+  const [url, setUrl] = useState('');
+
   const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('usuario')) : null;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUrl(window.location.href);
+    }
+  }, []);
 
   useEffect(() => {
     if (articulo) fetchComentarios();
@@ -67,12 +74,46 @@ export default function ArticleViewModal({ show, onClose, articulo }) {
     }
   };
 
+  const handleShare = async () => {
+    const mensaje = `${articulo.titulo}\n\nLee más aquí: ${url}`;
+  
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: articulo.titulo,
+          text: mensaje,
+          url: url,
+        });
+      } catch (error) {
+        console.error('Error al compartir:', error);
+      }
+    } else {
+      alert(`Copia y comparte este enlace:\n\n${url}`);
+    }
+  
+    if (user && user.usuarioId !== articulo.usuarioId) {
+      await fetch('/api/articulos/compartir', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          usuarioIdCompartidor: user.usuarioId,
+          articuloId: articulo.articuloId,
+        }),
+      });
+    }
+  }; 
+
   if (!articulo) return null;
 
   return (
     <Modal show={show} onHide={onClose} size="lg">
       <Modal.Header closeButton>
-        <Modal.Title>{articulo.titulo}</Modal.Title>
+        <Modal.Title className="d-flex align-items-center justify-content-between w-100">
+          <span>{articulo.titulo}</span>
+          <Button variant="outline-primary" size="sm" onClick={handleShare}>
+            Compartir
+          </Button>
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <img

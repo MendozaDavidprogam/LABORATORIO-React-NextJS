@@ -1,4 +1,4 @@
-// app/components/ArticleModal.jsx
+
 'use client';
 
 import { useState } from 'react';

@@ -1,4 +1,3 @@
-// api/roles/route.jsx
 import connectToDatabase from '../../lib/mongodb';
 import Rol from '../../models/Rol';
 

@@ -1,4 +1,4 @@
-// app/components/Header.jsx
+
 import { Navbar, NavbarBrand, Container, Nav, Button } from 'react-bootstrap';
 
 export default function Header() {

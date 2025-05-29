@@ -1,4 +1,4 @@
-// models/Usuario.jsx
+
 import mongoose from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 

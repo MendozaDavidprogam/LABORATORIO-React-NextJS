@@ -1,4 +1,4 @@
-// models/Notificacion.jsx
+
 import mongoose from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 
@@ -8,7 +8,7 @@ const NotificacionSchema = new mongoose.Schema({
   notificacionId: { type: Number, unique: true },
   usuarioIdDestino: { type: Number, required: true },
   mensaje: { type: String, required: true },
-  articuloId: { type: mongoose.Schema.Types.ObjectId, ref: 'Articulo' }, // Relación con el articulo
+  articuloId: { type: mongoose.Schema.Types.ObjectId, ref: 'Articulo' }, // Relacion con el articulo
   leido: { type: Boolean, default: false },
   fecha: { type: Date, default: Date.now },
 });

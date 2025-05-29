@@ -1,4 +1,3 @@
-// app/api/notificaciones.jsx
 import connectToDatabase from '../../lib/mongodb';
 import Notificacion from '../../models/Notificacion';
 import mongoose from 'mongoose';

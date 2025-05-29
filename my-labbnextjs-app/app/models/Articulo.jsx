@@ -1,4 +1,4 @@
-// models/Articulo.jsx
+
 import mongoose from 'mongoose';
 import AutoIncrementFactory from 'mongoose-sequence';
 
@@ -14,7 +14,7 @@ const ArticuloSchema = new mongoose.Schema({
   usuarioId: { type: Number, required: true, ref: 'Usuario' },
 });
 
-// Aplica el plugin para autoincrementar 'articuloId'
+// plugin para autoincrementar 'articuloId'
 ArticuloSchema.plugin(AutoIncrement, { inc_field: 'articuloId' });
 
 export default mongoose.models.Articulo || mongoose.model('Articulo', ArticuloSchema, 'articulos');

@@ -1,4 +1,3 @@
-// app/api/comentarios/route.jsx
 import connectToDatabase from '../../lib/mongodb';
 import Comentario from '../../models/Comentario';
 import Articulo from '../../models/Articulo';
