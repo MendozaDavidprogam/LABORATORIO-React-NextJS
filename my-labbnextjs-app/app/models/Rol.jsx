@@ -1,9 +1,10 @@
-// models/Rol.jsx
+
 import mongoose from 'mongoose';
 
-const rolSchema = new mongoose.Schema({
-  nombre: String,
+const RolSchema = new mongoose.Schema({
+  _id: { type: Number, required: true }, // id numerico
+  nombre: { type: String, required: true },
   descripcion: String,
-}, { collection: 'rol' }); 
+}, { _id: false });
 
-export default mongoose.models.Rol || mongoose.model('Rol', rolSchema);
+export default mongoose.models.Rol || mongoose.model('Rol', RolSchema, 'rol');
