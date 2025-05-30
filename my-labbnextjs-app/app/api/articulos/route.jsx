@@ -155,6 +155,7 @@ export async function GET(request) {
   }
 }*/
 
+
 import connectToDatabase from '../../lib/mongodb';
 import Articulo from '../../models/Articulo';
 import Usuario from '../../models/Usuario';

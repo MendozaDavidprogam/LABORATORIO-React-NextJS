@@ -55,9 +55,11 @@ async function connectToDatabase() {
   }
 
   if (!cached.promise) {
+    // Aquí agregas el console.log para verificar el valor
+    console.log('Valor de MONGODB_URI:', MONGODB_URI);
+
     const opts = {
       bufferCommands: false,
-      
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
