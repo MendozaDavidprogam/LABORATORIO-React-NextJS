@@ -57,7 +57,7 @@ async function connectToDatabase() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      // Puedes agregar otras opciones aquí según tus necesidades
+      
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
