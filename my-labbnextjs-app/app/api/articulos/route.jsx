@@ -155,7 +155,6 @@ export async function GET(request) {
   }
 }*/
 
-
 import connectToDatabase from '../../lib/mongodb';
 import Articulo from '../../models/Articulo';
 import Usuario from '../../models/Usuario';
@@ -273,11 +272,6 @@ export async function GET(request) {
 
     const articulos = await Articulo.find(filtro).sort({ fechaCreacion: -1 }).lean();
 
-    // Logs para diagnóstico
-    console.log('Tipo de articulos:', typeof articulos);
-    console.log('Es array?', Array.isArray(articulos));
-    console.log('Contenido articulos:', articulos);
-
     if (!Array.isArray(articulos)) {
       console.error('La consulta no devolvió un arreglo:', articulos);
       return new Response(JSON.stringify([]), {
@@ -286,33 +280,26 @@ export async function GET(request) {
       });
     }
 
-    console.log('usuarioIds en articulos:', articulos.map(a => a.usuarioId));
-
     const usuarioIds = [...new Set(articulos.map(a => a.usuarioId))];
-    console.log('usuarioIds únicos:', usuarioIds);
 
     const usuarios = await Usuario.find({ usuarioId: { $in: usuarioIds } })
       .select('usuarioId nombre apellido')
       .lean();
-
-    console.log('Usuarios encontrados:', usuarios);
 
     const usuariosMap = {};
     usuarios.forEach(u => {
       usuariosMap[u.usuarioId] = u;
     });
 
-    const articulosConUsuario = Array.isArray(articulos) ? articulos.map(articulo => {
+    const articulosConUsuario = articulos.map(articulo => {
       const usuario = usuariosMap[articulo.usuarioId];
       return {
         ...articulo,
         autor: usuario ? `${usuario.nombre} ${usuario.apellido}` : 'Desconocido',
       };
-    }) : [];
+    });
 
-    console.log('articulosConUsuario:', articulosConUsuario);
     console.log('Artículos encontrados:', articulosConUsuario.length);
-
     return new Response(
       JSON.stringify(articulosConUsuario),
       {
