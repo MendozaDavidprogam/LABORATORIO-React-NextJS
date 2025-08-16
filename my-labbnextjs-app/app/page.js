@@ -1,7 +1,6 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {  Navbar,  Container,  Nav,  Button,  Row,  Col,  Spinner,  Form,  Alert,  Badge,  Dropdown,
 } from 'react-bootstrap';
@@ -15,98 +14,6 @@ import ArticleViewModal from './components/ArticleViewModal';
 export default function Home() {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showArticleModal, setShowArticleModal] = useState(false);
-  const [showViewModal, setShowViewModal] = useState(false);
-
-  const [user, setUser] = useState(null);
-  const [articulos, setArticulos] = useState([]);
-  const [articuloSeleccionado, setArticuloSeleccionado] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const [filtroTitulo, setFiltroTitulo] = useState('');
-  const [filtroCategoria, setFiltroCategoria] = useState('');
-  const [filtroFecha, setFiltroFecha] = useState('');
-
-  const [mensajeLogout, setMensajeLogout] = useState(false);
-  const [notificaciones, setNotificaciones] = useState([]);
-
-  const handleLogout = () => {
-    setUser(null);
-    localStorage.removeItem('usuario');
-    setMensajeLogout(true);
-    setTimeout(() => setMensajeLogout(false), 3000);
-  };
-
-  const fetchArticulos = async (filters = {}) => {
-    try {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (filters.titulo) params.append('titulo', filters.titulo);
-      if (filters.categoria) params.append('categoria', filters.categoria);
-      if (filters.fecha) params.append('fecha', filters.fecha);
-
-      const url = '/api/articulos' + (params.toString() ? `?${params.toString()}` : '');
-      const res = await fetch(url, { cache: 'no-store' });
-      const data = await res.json();
-      setArticulos(data);
-    } catch (error) {
-      console.error('Error al cargar artículos:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchNotificaciones = async () => {
-    if (!user) return;
-    try {
-      const res = await fetch(`/api/notificaciones?usuarioId=${user.usuarioId}`);
-      if (!res.ok) throw new Error('Error en la consulta de notificaciones');
-      const data = await res.json();
-      setNotificaciones(data);
-    } catch (error) {
-      console.error('Error al obtener notificaciones:', error);
-    }
-  };
-
-  useEffect(() => {
-    const usuarioGuardado = localStorage.getItem('usuario');
-    if (usuarioGuardado) {
-      const parsedUser = JSON.parse(usuarioGuardado);
-      setUser(parsedUser);
-    }
-    fetchArticulos();
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      fetchNotificaciones();
-    } else {
-      setNotificaciones([]);
-    }
-  }, [user]);
-
-  const handleSelectArticulo = (articulo) => {
-    setArticuloSeleccionado(articulo);
-    setShowViewModal(true);
-  };
-
-  const handleBuscar = (e) => {
-    e.preventDefault();
-    fetchArticulos({
-      titulo: filtroTitulo.trim(),
-      categoria: filtroCategoria.trim(),
-      fecha: filtroFecha.trim(),
-    });
-  };
-
-  const handleLimpiarFiltros = () => {
-    setFiltroTitulo('');
-    setFiltroCategoria('');
-    setFiltroFecha('');
-    fetchArticulos();
-  };
-
-  const cantidadNoLeidas = notificaciones.filter((n) => !n.leido).length;
 
   return (
     <div className="d-flex flex-column min-vh-100">
